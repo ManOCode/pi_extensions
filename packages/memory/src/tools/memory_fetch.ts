@@ -18,14 +18,14 @@ export const memory_fetch = defineTool({
       const filePath = path.join(MEMORY_DIR, `${params.name}.md`);
       const content = await fs.readFile(filePath, "utf8");
       const result = {
-        content: [{ type: "text", text: content }],
+        content: [{ type: "text" as const, text: content }],
         details: undefined,
       };
       await logToolExecution("memory_fetch", params, result);
       return result;
     } catch (err) {
       const result = {
-        content: [{ type: "text", text: `Memory file ${params.name}.md not found.` }],
+        content: [{ type: "text" as const, text: `Memory file ${params.name}.md not found.` }],
         isError: true,
         details: undefined,
       };

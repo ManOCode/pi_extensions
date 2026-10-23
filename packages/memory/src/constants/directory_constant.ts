@@ -2,8 +2,9 @@ import * as path from "node:path";
 import * as os from "node:os";
 import * as fs from "node:fs/promises";
 
-export const MEMORY_DIR = path.join(os.homedir(), ".pi-extensions", "memory");
-export const LOG_DIR = path.join(os.homedir(), ".pi-extensions", "log");
+export const ROOT_DIR = path.join(os.homedir(), ".pi-extensions");
+export const MEMORY_DIR = path.join(ROOT_DIR, "memory");
+export const LOG_DIR = path.join(ROOT_DIR, "log");
 
 export async function ensureMemoryDir() {
   try {

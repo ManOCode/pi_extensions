@@ -36,14 +36,14 @@ export const memory_search = defineTool({
         : "No matching memories found.";
 
       const result = {
-        content: [{ type: "text", text: finalResultText }],
+        content: [{ type: "text" as const, text: finalResultText }],
         details: undefined,
       };
       await logToolExecution("memory_search", params, result);
       return result;
     } catch (err) {
       const result = {
-        content: [{ type: "text", text: "Error searching memories." }],
+        content: [{ type: "text" as const, text: "Error searching memories." }],
         isError: true,
         details: undefined,
       };

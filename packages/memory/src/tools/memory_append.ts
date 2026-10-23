@@ -23,14 +23,14 @@ export const memory_append = defineTool({
       
       await fs.appendFile(filePath, contentToAppend, "utf8");
       const result = {
-        content: [{ type: "text", text: `Appended memory to ${params.name}.md` }],
+        content: [{ type: "text" as const, text: `Appended memory to ${params.name}.md` }],
         details: undefined,
       };
       await logToolExecution("memory_append", params, result);
       return result;
     } catch (err) {
       const result = {
-        content: [{ type: "text", text: `Error appending to memory file ${params.name}.md` }],
+        content: [{ type: "text" as const, text: `Error appending to memory file ${params.name}.md` }],
         isError: true,
         details: undefined,
       };

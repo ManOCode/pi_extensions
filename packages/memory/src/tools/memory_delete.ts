@@ -18,14 +18,14 @@ export const memory_delete = defineTool({
       const filePath = path.join(MEMORY_DIR, `${params.name}.md`);
       await fs.unlink(filePath);
       const result = {
-        content: [{ type: "text", text: `Deleted memory ${params.name}.md` }],
+        content: [{ type: "text" as const, text: `Deleted memory ${params.name}.md` }],
         details: undefined,
       };
       await logToolExecution("memory_delete", params, result);
       return result;
     } catch (err) {
       const result = {
-        content: [{ type: "text", text: `Memory file ${params.name}.md not found.` }],
+        content: [{ type: "text" as const, text: `Memory file ${params.name}.md not found.` }],
         isError: true,
         details: undefined,
       };

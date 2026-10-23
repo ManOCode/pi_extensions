@@ -19,7 +19,7 @@ export const memory_store = defineTool({
       const filePath = path.join(MEMORY_DIR, `${params.name}.md`);
       await fs.writeFile(filePath, params.content, "utf8");
       const result = {
-        content: [{ type: "text", text: `Saved memory to ${params.name}.md` }],
+        content: [{ type: "text" as const, text: `Saved memory to ${params.name}.md` }],
         details: undefined,
       };
       await logToolExecution("memory_store", params, result);

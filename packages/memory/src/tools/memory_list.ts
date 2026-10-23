@@ -19,14 +19,14 @@ export const memory_list = defineTool({
         ? `Stored memories: ${mdFiles.join(", ")}` 
         : "No memories stored.";
       const result = {
-        content: [{ type: "text", text: resultText }],
+        content: [{ type: "text" as const, text: resultText }],
         details: undefined,
       };
       await logToolExecution("memory_list", params, result);
       return result;
     } catch (err) {
       const result = {
-        content: [{ type: "text", text: "Error listing memories." }],
+        content: [{ type: "text" as const, text: "Error listing memories." }],
         isError: true,
         details: undefined,
       };
