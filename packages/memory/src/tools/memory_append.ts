@@ -1,22 +1,20 @@
 import { defineTool } from "@earendil-works/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
 import * as fs from "node:fs/promises";
-import * as path from "node:path";
-import { MEMORY_DIR, ensureMemoryDir } from "../constants/directory_constant.js";
+import { ensureFilePath } from "../utils/path_utils.js";
 import { logToolExecution } from "../utils/logger.js";
 
 export const memory_append = defineTool({
   name: "memory_append",
   label: "Memory Append",
-  description: "Append information to the end of a markdown file in the persistent memory store. If the file doesn't exist, it will be created.",
+  description: "Append information to the end of a markdown file in the persistent memory store. Supports directories. If the file doesn't exist, it will be created.",
   parameters: Type.Object({
-    name: Type.String({ description: "The name of the memory file (without extension)." }),
+    name: Type.String({ description: "The path/name of the memory file (without extension)." }),
     content: Type.String({ description: "The markdown content to append." }),
   }),
   execute: async (_, params) => {
     try {
-      await ensureMemoryDir();
-      const filePath = path.join(MEMORY_DIR, `${params.name}.md`);
+      const filePath = await ensureFilePath(params.name);
       
       // Ensure content starts on a new line
       const contentToAppend = `\n${params.content}`;

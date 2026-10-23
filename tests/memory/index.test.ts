@@ -21,7 +21,7 @@ describe("memory", () => {
 
   it("should register all memory tools", () => {
     extension(piMock);
-    expect(piMock.registerTool).toHaveBeenCalledTimes(6);
+    expect(piMock.registerTool).toHaveBeenCalledTimes(7);
     const toolNames = registeredTools.map(t => t.name);
     expect(toolNames).toContain("memory_store");
     expect(toolNames).toContain("memory_fetch");
@@ -29,20 +29,24 @@ describe("memory", () => {
     expect(toolNames).toContain("memory_delete");
     expect(toolNames).toContain("memory_search");
     expect(toolNames).toContain("memory_append");
+    expect(toolNames).toContain("memory_edit");
   });
 
-  it("memory_store should write a file", async () => {
+  it("memory_store should write a file and create directories", async () => {
     extension(piMock);
     const memoryStore = registeredTools.find(t => t.name === "memory_store");
     
-    const name = "test-memory";
+    const name = "home/tasks/test-memory";
     const content = "# Test\nContent";
     
     await memoryStore.execute("test-id", { name, content }, undefined, undefined, {} as any);
     
-    expect(fs.mkdir).toHaveBeenCalled();
+    expect(fs.mkdir).toHaveBeenCalledWith(
+      expect.stringContaining(path.join(os.homedir(), ".pi-extensions", "memory", "home", "tasks")),
+      { recursive: true }
+    );
     expect(fs.writeFile).toHaveBeenCalledWith(
-      expect.stringContaining(path.join(os.homedir(), ".pi-extensions", "memory", `${name}.md`)),
+      expect.stringContaining(path.join(os.homedir(), ".pi-extensions", "memory", "home", "tasks", "test-memory.md")),
       content,
       "utf8"
     );
@@ -61,14 +65,55 @@ describe("memory", () => {
     expect(fs.readFile).toHaveBeenCalled();
   });
 
-  it("memory_list should return list of md files", async () => {
+  it("memory_list should return list of files and dirs in specific path", async () => {
     extension(piMock);
     const memoryList = registeredTools.find(t => t.name === "memory_list");
     
-    (fs.readdir as any).mockResolvedValue(["mem1.md", "mem2.md", "not-md.txt"]);
+    (fs.readdir as any).mockResolvedValue([
+      { name: "mem1.md", isDirectory: () => false },
+      { name: "folder1", isDirectory: () => true },
+    ]);
     
-    const result = await memoryList.execute("test-id", {}, undefined, undefined, {} as any);
-    expect(result.content[0].text).toBe("Stored memories: mem1, mem2");
+    const result = await memoryList.execute("test-id", { path: "home" }, undefined, undefined, {} as any);
+    expect(result.content[0].text).toContain("Contents of home:");
+    expect(result.content[0].text).toContain("[FILE] mem1");
+    expect(result.content[0].text).toContain("[DIR] folder1/");
+  });
+
+  it("memory_edit should replace text in file", async () => {
+    extension(piMock);
+    const memoryEdit = registeredTools.find(t => t.name === "memory_edit");
+    
+    (fs.readFile as any).mockResolvedValue("Status: Pending\nPriority: High");
+    
+    const result = await memoryEdit.execute("test-id", { 
+      name: "test-memory", 
+      oldText: "Status: Pending", 
+      newText: "Status: Done" 
+    }, undefined, undefined, {} as any);
+    
+    expect(result.content[0].text).toContain("Successfully updated");
+    expect(fs.writeFile).toHaveBeenCalledWith(
+      expect.any(String),
+      "Status: Done\nPriority: High",
+      "utf8"
+    );
+  });
+
+  it("memory_edit should fail if text not found", async () => {
+    extension(piMock);
+    const memoryEdit = registeredTools.find(t => t.name === "memory_edit");
+    
+    (fs.readFile as any).mockResolvedValue("Status: Pending");
+    
+    const result = await memoryEdit.execute("test-id", { 
+      name: "test-memory", 
+      oldText: "Status: Done", 
+      newText: "Status: Active" 
+    }, undefined, undefined, {} as any);
+    
+    expect(result.isError).toBe(true);
+    expect(result.content[0].text).toContain("Could not find the exact text");
   });
 
   it("memory_delete should remove a file", async () => {
@@ -83,21 +128,21 @@ describe("memory", () => {
     );
   });
 
-  it("memory_search should find matching lines", async () => {
+  it("memory_search should find matching lines recursively", async () => {
     extension(piMock);
     const memorySearch = registeredTools.find(t => t.name === "memory_search");
     
-    (fs.readdir as any).mockResolvedValue(["mem1.md", "mem2.md"]);
-    (fs.readFile as any).mockImplementation((filePath: string) => {
-      if (filePath.endsWith("mem1.md")) return Promise.resolve("Apple is red\nBanana is yellow");
-      if (filePath.endsWith("mem2.md")) return Promise.resolve("Apple is a fruit\nCherry is red");
-      return Promise.reject(new Error("File not found"));
+    (fs.readdir as any).mockImplementation((dir: string) => {
+      if (dir.endsWith("memory")) return Promise.resolve([{ name: "home", isDirectory: () => true }]);
+      if (dir.endsWith("home")) return Promise.resolve([{ name: "mem1.md", isDirectory: () => false }]);
+      return Promise.resolve([]);
     });
     
+    (fs.readFile as any).mockResolvedValue("Apple is red");
+    
     const result = await memorySearch.execute("test-id", { query: "Apple" }, undefined, undefined, {} as any);
-    expect(result.content[0].text).toContain("Found matches in 2 file(s)");
+    expect(result.content[0].text).toContain(`Path: ${path.join("home", "mem1")}`);
     expect(result.content[0].text).toContain("L1: Apple is red");
-    expect(result.content[0].text).toContain("L1: Apple is a fruit");
   });
 
   it("memory_append should append to a file", async () => {
