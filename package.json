@@ -1,0 +1,19 @@
+{
+  "name": "pi-mono-extensions",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "test": "vitest run",
+    "lint": "npm run lint --workspaces",
+    "ext:add": "node scripts/manage-extensions.js add",
+    "ext:remove": "node scripts/manage-extensions.js remove"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.15",
+    "typescript": "^5.0.0",
+    "vitest": "^5.0.5"
+  }
+}
