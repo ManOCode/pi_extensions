@@ -2,6 +2,7 @@ import { defineTool } from "@earendil-works/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
 import * as fs from "node:fs/promises";
 import { ensureFilePath } from "../utils/path_utils.js";
+import { updateIndex } from "../utils/index_utils.js";
 import { logToolExecution } from "../utils/logger.js";
 
 export const memory_store = defineTool({
@@ -16,6 +17,10 @@ export const memory_store = defineTool({
     try {
       const filePath = await ensureFilePath(params.name);
       await fs.writeFile(filePath, params.content, "utf8");
+      
+      // Auto-update the index
+      await updateIndex(params.name);
+
       const result = {
         content: [{ type: "text" as const, text: `Saved memory to ${params.name}.md` }],
         details: undefined,

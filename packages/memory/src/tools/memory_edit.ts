@@ -3,6 +3,7 @@ import { Type } from "@sinclair/typebox";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { MEMORY_DIR } from "../constants/directory_constant.js";
+import { updateIndex } from "../utils/index_utils.js";
 import { logToolExecution } from "../utils/logger.js";
 
 export const memory_edit = defineTool({
@@ -31,6 +32,9 @@ export const memory_edit = defineTool({
       
       const updatedContent = content.replace(params.oldText, params.newText);
       await fs.writeFile(filePath, updatedContent, "utf8");
+      
+      // Auto-update the index
+      await updateIndex(params.name);
       
       const result = {
         content: [{ type: "text" as const, text: `Successfully updated memory in ${params.name}.md` }],

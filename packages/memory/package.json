@@ -1,5 +1,5 @@
 {
-  "name": "@pi-mono/memory",
+  "name": "@pi-extensions/memory",
   "version": "0.1.0",
   "description": "Simple markdown-based memory storage for pi extensions",
   "main": "dist/index.js",

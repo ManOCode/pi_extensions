@@ -2,6 +2,7 @@ import { defineTool } from "@earendil-works/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
 import * as fs from "node:fs/promises";
 import { ensureFilePath } from "../utils/path_utils.js";
+import { updateIndex } from "../utils/index_utils.js";
 import { logToolExecution } from "../utils/logger.js";
 
 export const memory_append = defineTool({
@@ -20,6 +21,10 @@ export const memory_append = defineTool({
       const contentToAppend = `\n${params.content}`;
       
       await fs.appendFile(filePath, contentToAppend, "utf8");
+      
+      // Auto-update the index
+      await updateIndex(params.name);
+
       const result = {
         content: [{ type: "text" as const, text: `Appended memory to ${params.name}.md` }],
         details: undefined,
