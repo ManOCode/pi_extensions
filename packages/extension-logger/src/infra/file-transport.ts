@@ -1,4 +1,4 @@
-import { LogEntry, LogTransport, LogLevelName } from "../../core/types.js";
+import { LogEntry, LogTransport, LogLevelName } from "../core/types.js";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -6,7 +6,7 @@ export class FileTransport implements LogTransport {
   private readonly logFilePath: string;
   private readonly maxFileSize: number;
 
-  constructor(options: { filePath: string; maxFileSize?: number } = {}) {
+  constructor(options: { filePath: string; maxFileSize?: number }) {
     this.logFilePath = options.filePath;
     this.maxFileSize = options.maxFileSize ?? 10 * 1024 * 1024; // 10MB default
 

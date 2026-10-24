@@ -1,24 +1,38 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { ExtensionSession } from '../src/index.js';
 
-describe('ExtensionSession', () => {
-  it('should set and get values', () => {
-    const session = new ExtensionSession();
-    session.set('foo', 'bar');
-    expect(session.get('foo')).toBe('bar');
+describe('pi-extension-session', () => {
+  let session: ExtensionSession;
+
+  beforeEach(() => {
+    session = new ExtensionSession();
   });
 
-  it('should clear values', () => {
-    const session = new ExtensionSession();
-    session.set('foo', 'bar');
+  it('should set and get session data', () => {
+    session.set('user', 'Alice');
+    expect(session.get('user')).toBe('Alice');
+  });
+
+  it('should return undefined for non-existent keys', () => {
+    expect(session.get('non-existent')).toBeUndefined();
+  });
+
+  it('should clear session data', () => {
+    session.set('key1', 'val1');
+    session.set('key2', 'val2');
     session.clear();
-    expect(session.get('foo')).toBeUndefined();
+    expect(session.getAll()).toEqual({});
+    expect(session.get('key1')).toBeUndefined();
   });
 
-  it('should return all data', () => {
-    const session = new ExtensionSession();
-    session.set('foo', 'bar');
-    session.set('baz', 123);
-    expect(session.getAll()).toEqual({ foo: 'bar', baz: 123 });
+  it('should return a copy of all session data', () => {
+    session.set('a', 1);
+    session.set('b', 2);
+    const data = session.getAll();
+    expect(data).toEqual({ a: 1, b: 2 });
+    
+    // Verify it is a copy
+    data.a = 3;
+    expect(session.get('a')).toBe(1);
   });
 });
