@@ -31,13 +31,16 @@ export class FileTransport implements LogTransport {
   }
 
   private format(entry: LogEntry): string {
-    return JSON.stringify({
-      timestamp: entry.timestamp.toISOString(),
-      level: LogLevelName[entry.level],
-      message: entry.message,
-      context: entry.context,
-      error: entry.error?.stack || entry.error?.message,
-    });
+    const timestamp = entry.timestamp.toISOString();
+    const level = LogLevelName[entry.level];
+    const context = entry.context 
+      ? ` ${JSON.stringify(entry.context)}` 
+      : "";
+    const error = entry.error 
+      ? `\n- Error: ${entry.error.stack || entry.error.message}` 
+      : "";
+
+    return `[${timestamp}] **${level}**: ${entry.message}${context}${error}`;
   }
 
   private rotate(): void {

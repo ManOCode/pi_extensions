@@ -1,20 +1,17 @@
 import { type ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { PI_EXTENSIONS_ROOT } from "@manocode/pi-extension-core";
 import { getLogger } from "@manocode/pi-extension-logger";
+import { SessionableBaseTool } from "@manocode/pi-extension-session";
 import fs from "node:fs/promises";
 import path from "node:path";
-import os from "node:os";
 
-const ROOT_DIR = path.join(os.homedir(), ".pi-extensions");
-let MEMORY_DIR = path.join(ROOT_DIR, "memory");
+let MEMORY_DIR = path.join(PI_EXTENSIONS_ROOT, "memory");
 
 export function setMemoryDir(dir: string) {
   MEMORY_DIR = dir;
 }
 
-const logger = getLogger({
-  logFile: path.join(ROOT_DIR, "logs", "memory.log"),
-});
-
+const logger = getLogger({});
 
 async function ensureMemoryDir() {
   try {
@@ -25,19 +22,20 @@ async function ensureMemoryDir() {
   }
 }
 
-export const saveMemory = {
-  name: "saveMemory",
-  label: "Save Memory",
-  description: "Saves information to the long-term memory as a markdown file.",
-  parameters: {
+class SaveMemoryTool extends SessionableBaseTool {
+  name = "saveMemory";
+  label = "Save Memory";
+  description = "Saves information to the long-term memory as a markdown file.";
+  parameters = {
     type: "object",
     properties: {
       key: { type: "string", description: "A unique identifier for the memory entry (e.g., 'user_preferences')." },
       content: { type: "string", description: "The markdown content to save." },
     },
     required: ["key", "content"],
-  },
-  execute: async (id: string, { key, content }: { key: string; content: string }) => {
+  };
+
+  protected async run(id: string, { key, content }: { key: string; content: string }, pi: ExtensionAPI) {
     logger.info("Saving memory", { key });
     try {
       await ensureMemoryDir();
@@ -49,21 +47,22 @@ export const saveMemory = {
       logger.error("Error saving memory", { key }, error as Error);
       throw new Error(`Failed to save memory: ${error}`);
     }
-  },
-};
+  }
+}
 
-export const getMemory = {
-  name: "getMemory",
-  label: "Get Memory",
-  description: "Retrieves information from the long-term memory by its key.",
-  parameters: {
+class GetMemoryTool extends SessionableBaseTool {
+  name = "getMemory";
+  label = "Get Memory";
+  description = "Retrieves information from the long-term memory by its key.";
+  parameters = {
     type: "object",
     properties: {
       key: { type: "string", description: "The unique identifier of the memory entry to retrieve." },
     },
     required: ["key"],
-  },
-  execute: async (id: string, { key }: { key: string }) => {
+  };
+
+  protected async run(id: string, { key }: { key: string }, pi: ExtensionAPI) {
     logger.info("Retrieving memory", { key });
     try {
       const filePath = path.join(MEMORY_DIR, `${key}.md`);
@@ -78,18 +77,23 @@ export const getMemory = {
       logger.error("Error retrieving memory", { key }, error as Error);
       throw new Error(`Failed to retrieve memory: ${error}`);
     }
-  },
+  }
+}
+
+export const test = {
+  
 };
 
-export const listMemory = {
-  name: "listMemory",
-  label: "List Memory",
-  description: "Lists all available memory keys.",
-  parameters: {
+class ListMemoryTool extends SessionableBaseTool {
+  name = "listMemory";
+  label = "List Memory";
+  description = "Lists all available memory keys.";
+  parameters = {
     type: "object",
     properties: {},
-  },
-  execute: async (id: string) => {
+  };
+
+  protected async run(id: string, args: any, pi: ExtensionAPI) {
     logger.info("Listing all memory keys");
     try {
       await ensureMemoryDir();
@@ -103,12 +107,21 @@ export const listMemory = {
       logger.error("Error listing memory", {}, error as Error);
       throw new Error(`Failed to list memory: ${error}`);
     }
-  },
-};
+  }
+}
 
 export default function (pi: ExtensionAPI) {
   logger.info("Loading Memory Extension");
-  pi.registerTool(saveMemory);
-  pi.registerTool(getMemory);
-  pi.registerTool(listMemory);
+  
+  const saveMemory = new SaveMemoryTool();
+  const getMemory = new GetMemoryTool();
+  const listMemory = new ListMemoryTool();
+  
+  saveMemory.setPi(pi);
+  getMemory.setPi(pi);
+  listMemory.setPi(pi);
+
+  pi.registerTool(saveMemory.asTool());
+  pi.registerTool(getMemory.asTool());
+  pi.registerTool(listMemory.asTool());
 }

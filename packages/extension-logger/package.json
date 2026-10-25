@@ -8,7 +8,9 @@
     "prebuild": "rm -rf dist",
     "build": "tsc"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@manocode/pi-extension-core": "workspace:1.0.0"
+  },
   "devDependencies": {
     "typescript": "^5.0.0",
     "vitest": "^1.0.0"

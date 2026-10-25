@@ -1,0 +1,20 @@
+{
+  "name": "@manocode/pi-extension-core",
+  "version": "1.0.0",
+  "description": "Core utilities and base classes for pi extensions",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@earendil-works/pi-coding-agent": "^1.4.0",
+    "vitest": "^1.0.0",
+    "typescript": "^5.0.0"
+  }
+}
