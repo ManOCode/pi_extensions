@@ -1,4 +1,4 @@
-import { LogEntry, LogTransport, LogLevelName } from "../core/types.js";
+import { LogEntry, LogTransport, LogLevelName } from "../abstractions/types.js";
 
 export class ConsoleTransport implements LogTransport {
   private readonly colors = {

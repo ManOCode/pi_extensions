@@ -1,6 +1,6 @@
-import { LogLevel, LogEntry, LogTransport, LoggerOptions } from "./types.js";
+import { LogLevel, LoggerOptions, LogTransport, LogEntry, ILogger } from "./types.js";
 
-export class Logger {
+export class Logger implements ILogger {
   private readonly minLevel: LogLevel;
   private readonly defaultContext: Record<string, any>;
   private readonly transports: LogTransport[];
@@ -56,4 +56,4 @@ export class Logger {
   }
 }
 
-export { LogLevel } from "./types.js";
+export { LogLevel, LogTransport, ILogger } from "./types.js";
