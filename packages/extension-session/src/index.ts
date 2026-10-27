@@ -1,6 +1,5 @@
-import { type ExtensionAPI } from "@manocode/pi-extension-core";
 import { BaseTool } from "@manocode/pi-extension-core";
-import { getLogger } from "@manocode/pi-extension-logger";
+import { getLogger } from "./behaviors/log-manager";
 import fs from "node:fs/promises";
 import path from "node:path";
 import os from "node:os";
@@ -8,7 +7,7 @@ import os from "node:os";
 const ROOT_DIR = path.join(os.homedir(), ".pi-extensions");
 const SESSION_DIR = path.join(ROOT_DIR, "sessions");
 
-const logger = getLogger({});
+const logger = getLogger();
 
 interface ToolExecutionRecord {
   toolCallId: string;
@@ -86,12 +85,12 @@ export class SessionManager {
  * Base tool that automatically records its execution to the session logs.
  */
 export abstract class SessionableBaseTool extends BaseTool {
-  async execute(id: string, args: any, pi: ExtensionAPI): Promise<any> {
+  async execute(id: string, args: any): Promise<any> {
     await SessionManager.recordStart(id, this.name, args);
     let isError = false;
     let errorDetails: any;
     try {
-      const result = await this.run(id, args, pi);
+      const result = await this.run(id, args);
       await SessionManager.recordResult(id, result);
       return result;
     } catch (error: any) {

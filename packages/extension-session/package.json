@@ -6,13 +6,12 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "prebuild": "rm -rf dist",
-    "build": "tsc",
-    "test": "vitest run"
+    "build": "tsc"
   },
   "dependencies": {
     "@earendil-works/pi-coding-agent": "^1.4.0",
     "@manocode/pi-extension-core": "workspace:1.0.0",
-    "@manocode/pi-extension-logger": "1.0.0"
+    "@manocode/pi-extension-logger": "workspace:1.0.0"
   },
   "devDependencies": {
     "typescript": "^5.0.0",
