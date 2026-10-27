@@ -1,10 +1,9 @@
 import { PI_EXTENSIONS_ROOT } from "@manocode/pi-extension-core";
 import { getLogger } from "./log-manager";
 import { SessionableBaseTool } from "@manocode/pi-extension-session";
+import { MEMORY_DIR } from "../config";
 import fs from "node:fs/promises";
 import path from "node:path";
-
-let MEMORY_DIR = path.join(PI_EXTENSIONS_ROOT, "memory");
 
 const logger = getLogger();
 

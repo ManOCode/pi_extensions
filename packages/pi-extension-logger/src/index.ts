@@ -1,3 +1,3 @@
-import { LogLevel, ILogger, createLogger } from "./behaviors/log-manager";
+import { LogLevel, ILogger, createLogger, getLogger } from "./behaviors/log-manager";
 
-export { LogLevel, ILogger, createLogger };
+export { LogLevel, ILogger, createLogger, getLogger };

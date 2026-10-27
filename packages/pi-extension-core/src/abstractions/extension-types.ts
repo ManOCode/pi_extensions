@@ -3,10 +3,25 @@
  * and standardized error handling.
  */
 export abstract class BaseTool {
+  protected pi?: any;
   abstract name: string;
   abstract label: string;
   abstract description: string;
   abstract parameters: any;
+
+  setPi(pi: any): void {
+    this.pi = pi;
+  }
+
+  asTool() {
+    return {
+      name: this.name,
+      label: this.label,
+      description: this.description,
+      parameters: this.parameters,
+      execute: (id: string, args: any) => this.execute(id, args),
+    };
+  }
 
   async execute(id: string, args: any): Promise<any> {
     try {

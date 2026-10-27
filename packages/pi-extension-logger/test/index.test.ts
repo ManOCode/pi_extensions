@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { createLogger, getLogger } from '../src/core/manager.js';
-import { LogLevel } from '../src/core/types.js';
-import { FileTransport } from '../src/infra/file-transport.js';
+import { createLogger, getLogger, LogLevel } from '../src/index.js';
+import { FileTransport } from '../src/clients/file-transport.js';
 import fs from 'node:fs';
 import path from 'node:path';
 

@@ -101,6 +101,23 @@ export abstract class SessionableBaseTool extends BaseTool {
       await SessionManager.recordEnd(id, isError, errorDetails);
     }
   }
+}
 
-  // Re-implementing execute for better finally block handling
+export default function (pi: any) {
+  logger.info("Loading Session Capture Extension");
+
+  pi.on("tool_execution_start", async (event: any) => {
+    const { toolCallId, toolName, args } = event;
+    await SessionManager.recordStart(toolCallId, toolName, args);
+  });
+
+  pi.on("tool_result", async (event: any) => {
+    const { toolCallId, content, details, isError } = event;
+    await SessionManager.recordResult(toolCallId, { content, details, isError });
+  });
+
+  pi.on("tool_execution_end", async (event: any) => {
+    const { toolCallId, result, isError } = event;
+    await SessionManager.recordEnd(toolCallId, isError, result);
+  });
 }
