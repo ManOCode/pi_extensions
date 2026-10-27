@@ -1,7 +1,7 @@
 {
   "name": "@manocode/pi-memory-extension",
-  "version": "0.1.0",
-  "description": "Simple markdown-based memory storage for pi extensions",
+  "version": "1.0.0",
+  "description": "Simple markdown-based memory storage for extensions",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@manocode/pi-extension-core": "workspace:1.0.0",
-    "@manocode/pi-extension-logger": "1.0.0",
+    "@manocode/pi-extension-logger": "workspace:1.0.0",
     "@manocode/pi-extension-session": "workspace:1.0.0",
     "@earendil-works/pi-ai": "^1.4.0",
     "@earendil-works/pi-coding-agent": "^1.4.0",
