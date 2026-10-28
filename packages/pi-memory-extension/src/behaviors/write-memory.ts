@@ -1,4 +1,3 @@
-import { PI_EXTENSIONS_ROOT } from "@manocode/pi-extension-core";
 import { getLogger } from "./log-manager";
 import { SessionableBaseTool } from "@manocode/pi-extension-session";
 import { MEMORY_DIR } from "../config";
@@ -16,7 +15,7 @@ async function ensureMemoryDir() {
   }
 }
 
-export class SaveMemoryTool extends SessionableBaseTool {
+class SaveMemoryTool extends SessionableBaseTool {
   name = "saveMemory";
   label = "Save Memory";
   description = "Saves information to the long-term memory as a markdown file.";
@@ -43,3 +42,5 @@ export class SaveMemoryTool extends SessionableBaseTool {
     }
   }
 }
+
+export const saveMemory = new SaveMemoryTool();

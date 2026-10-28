@@ -16,7 +16,7 @@ async function ensureMemoryDir() {
   }
 }
 
-export class GetMemoryTool extends SessionableBaseTool {
+class GetMemoryTool extends SessionableBaseTool {
   name = "getMemory";
   label = "Get Memory";
   description = "Retrieves information from the long-term memory by its key.";
@@ -46,7 +46,9 @@ export class GetMemoryTool extends SessionableBaseTool {
   }
 }
 
-export class ListMemoryTool extends SessionableBaseTool {
+export const getMemory = new GetMemoryTool();
+
+class ListMemoryTool extends SessionableBaseTool {
   name = "listMemory";
   label = "List Memory";
   description = "Lists all available memory keys.";
@@ -71,3 +73,5 @@ export class ListMemoryTool extends SessionableBaseTool {
     }
   }
 }
+
+export const listMemory = new ListMemoryTool();
