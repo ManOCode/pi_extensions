@@ -27,6 +27,8 @@ Thumbs.db
 
 # Tests
 coverage/
+*.log
+*.log.*
 
 # Pi Agent
 .pi/
