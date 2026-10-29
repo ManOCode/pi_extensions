@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import os from "node:os";
-import { Result, type ISessionClient } from "../abstractions/types.js";
+import { Result, type ISessionClient } from "../../abstractions/session/types.js";
 
 export class SessionClient implements ISessionClient {
   private readonly sessionDir: string;

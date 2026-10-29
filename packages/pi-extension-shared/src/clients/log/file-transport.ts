@@ -1,4 +1,4 @@
-import { LogEntry, LogTransport, LogLevelName } from "../abstractions/types.js";
+import { LogEntry, LogTransport, LogLevelName } from "../../abstractions/log/types.js";
 import fs from "node:fs";
 import path from "node:path";
 

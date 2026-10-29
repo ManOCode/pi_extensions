@@ -1,4 +1,4 @@
-import { createLogger, LogLevel, ILogger } from "@manocode/pi-extension-logger";
+import { createLogger, LogLevel, ILogger } from "@manocode/pi-extension-shared";
 
 let instance: ILogger | null = null;
 

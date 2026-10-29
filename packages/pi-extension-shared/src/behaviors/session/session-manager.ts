@@ -1,13 +1,13 @@
-import { sessionClient } from "../clients/session-client.js";
+import { sessionClient } from "../../clients/session/session-client.js";
 import { getLogger } from "./log-manager.js";
-import { ToolExecutionRecord, Result, type ISessionManager } from "../abstractions/types.js";
+import { ToolExecutionRecord, Result, type ISessionManager } from "../../abstractions/session/types.js";
 
 const logger = getLogger();
 
 export class SessionManager implements ISessionManager {
   private readonly activeCalls = new Map<string, ToolExecutionRecord>();
 
-  async recordStart(toolCallId: string, toolName: string, args: unknown): Promise<void> {
+  async recordStart(toolCallId: string, toolName: string, args: any): Promise<void> {
     const record: ToolExecutionRecord = {
       toolCallId,
       toolName,
@@ -19,7 +19,7 @@ export class SessionManager implements ISessionManager {
     logger.debug("Session capture: tool start", { toolCallId, toolName });
   }
 
-  async recordResult(toolCallId: string, result: unknown): Promise<void> {
+  async recordResult(toolCallId: string, result: any): Promise<void> {
     const record = this.activeCalls.get(toolCallId);
     if (record) {
       record.result = result;
@@ -27,7 +27,7 @@ export class SessionManager implements ISessionManager {
     }
   }
 
-  async recordEnd(toolCallId: string, isError: boolean, error?: unknown): Promise<Result<void>> {
+  async recordEnd(toolCallId: string, isError: boolean, error?: any): Promise<Result<void>> {
     const record = this.activeCalls.get(toolCallId);
     if (!record) {
       return { success: false, error: new Error(`No active record found for toolCallId: ${toolCallId}`) };

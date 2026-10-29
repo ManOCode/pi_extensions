@@ -1,7 +1,7 @@
 {
-  "name": "@manocode/pi-extension-session",
+  "name": "@manocode/pi-extension-shared",
   "version": "1.0.0",
-  "description": "Pi extension to capture and persist tool executions for session analysis",
+  "description": "Shared utility package for pi extensions providing logging and session management",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -11,8 +11,7 @@
   },
   "dependencies": {
     "@earendil-works/pi-coding-agent": "^1.4.0",
-    "@manocode/pi-extension-core": "1.0.0",
-    "@manocode/pi-extension-logger": "1.0.0"
+    "@manocode/pi-extension-core": "1.0.0"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

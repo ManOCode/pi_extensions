@@ -1,5 +1,5 @@
+import { SessionableBaseTool } from "@manocode/pi-extension-shared";
 import { getLogger } from "./log-manager";
-import { SessionableBaseTool } from "@manocode/pi-extension-session";
 import { MEMORY_DIR } from "../config";
 import fs from "node:fs/promises";
 import path from "node:path";

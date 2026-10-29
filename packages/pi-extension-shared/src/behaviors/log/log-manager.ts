@@ -1,8 +1,10 @@
-import { PI_EXTENSIONS_ROOT } from "@manocode/pi-extension-core";
-import { LogLevel, LogTransport, Logger, ILogger,  } from "../abstractions/logger.js";
-import { ConsoleTransport } from "../clients/console-transport.js";
-import { FileTransport } from "../clients/file-transport.js";
+import { LogLevel, LogTransport, Logger, ILogger,  } from "../../abstractions/log/logger.js";
+import { ConsoleTransport } from "../../clients/log/console-transport.js";
+import { FileTransport } from "../../clients/log/file-transport.js";
 import path from "node:path";
+import os from "node:os";
+
+const PI_EXTENSIONS_ROOT = path.join(os.homedir(), ".pi-extensions");
 
 let loggerInstance: ILogger | null = null;
 
@@ -35,9 +37,11 @@ export function createLogger(options: {
   }, transports);
 }
 
-export function getLogger(): ILogger {
+export function getLogger(logLevel: LogLevel): ILogger {
   if (!loggerInstance) {
-    loggerInstance = createLogger();
+    loggerInstance = createLogger({
+      level: logLevel
+    });
   }
   return loggerInstance;
 }
