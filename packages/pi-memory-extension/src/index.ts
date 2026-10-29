@@ -1,12 +1,10 @@
 import { type ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { getLogger } from "./behaviors/log-manager";
-import { getMemory, listMemory } from "./behaviors/read-memory";
-import { saveMemory } from "./behaviors/write-memory";
-import { setMemoryDir } from "./config";
+export { getMemory, listMemory } from "./behaviors/read-memory";
+export { saveMemory } from "./behaviors/write-memory";
+export { setMemoryDir } from "./config";
 
 const logger = getLogger();
-
-export { setMemoryDir };
 
 export default function (pi: ExtensionAPI) {
   logger.info("Loading Memory Extension");

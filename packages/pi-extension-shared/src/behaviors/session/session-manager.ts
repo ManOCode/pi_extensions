@@ -7,7 +7,7 @@ const logger = getLogger();
 export class SessionManager implements ISessionManager {
   private readonly activeCalls = new Map<string, ToolExecutionRecord>();
 
-  async recordStart(toolCallId: string, toolName: string, args: any): Promise<void> {
+  async recordStart(toolCallId: string, toolName: string, args: any): Promise<Result<void>> {
     const record: ToolExecutionRecord = {
       toolCallId,
       toolName,
@@ -17,14 +17,17 @@ export class SessionManager implements ISessionManager {
     };
     this.activeCalls.set(toolCallId, record);
     logger.debug("Session capture: tool start", { toolCallId, toolName });
+    return { success: true, data: undefined };
   }
 
-  async recordResult(toolCallId: string, result: any): Promise<void> {
+  async recordResult(toolCallId: string, result: any): Promise<Result<void>> {
     const record = this.activeCalls.get(toolCallId);
     if (record) {
       record.result = result;
       logger.debug("Session capture: tool result", { toolCallId });
+      return { success: true, data: undefined };
     }
+    return { success: false, error: new Error(`No active record found for toolCallId: ${toolCallId}`) };
   }
 
   async recordEnd(toolCallId: string, isError: boolean, error?: any): Promise<Result<void>> {
