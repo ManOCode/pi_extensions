@@ -22,6 +22,11 @@ export interface LogEntry {
   error?: Error;
 }
 
+export interface LoggerOptions {
+  minLevel?: LogLevel;
+  defaultContext?: Record<string, any>;
+}
+
 export interface LogTransport {
   log(entry: LogEntry): Promise<void> | void;
 }
@@ -33,9 +38,4 @@ export interface ILogger {
   warn(message: string, context?: Record<string, any>): void;
   error(message: string, context?: Record<string, any>, error?: Error): void;
   fatal(message: string, context?: Record<string, any>, error?: Error): void;
-}
-
-export interface LoggerOptions {
-  minLevel?: LogLevel;
-  defaultContext?: Record<string, any>;
 }

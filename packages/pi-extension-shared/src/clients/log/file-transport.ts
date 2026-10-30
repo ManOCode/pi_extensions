@@ -1,13 +1,20 @@
 import { LogEntry, LogTransport, LogLevelName } from "../../abstractions/log/types.js";
 import fs from "node:fs";
 import path from "node:path";
+import os from "node:os";
+
+const PI_EXTENSIONS_ROOT = path.join(os.homedir(), ".pi-extensions");
 
 export class FileTransport implements LogTransport {
   private readonly logFilePath: string;
   private readonly maxFileSize: number;
 
-  constructor(options: { filePath: string; maxFileSize?: number }) {
-    this.logFilePath = options.filePath;
+  constructor(options: { maxFileSize?: number }) {
+    const now = new Date();
+    const day = String(now.getDate()).padStart(2, "0");
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const year = now.getFullYear();
+    this.logFilePath = path.join(PI_EXTENSIONS_ROOT, "logs", `${day}-${month}-${year}.md`);
     this.maxFileSize = options.maxFileSize ?? 10 * 1024 * 1024; // 10MB default
 
     const dir = path.dirname(this.logFilePath);
